@@ -555,6 +555,15 @@ curl https://raw.githubusercontent.com/e2e-win/e2e-win-prow-deployment/master/re
 ./e2e.test -- --provider=local -v --test --test_args="--ginkgo.focus=\\[Conformance\\]\\[NodeConformance\\]"
 ```
 
+The images used for testing Windows clusters are hosted on dockerhub.com under the e2eteam org. If you use Windows 1709 in your clusters, you need to use e2eteam1709 org by simply replacing repos in the repo_list.yaml file from above.
+
+Docker files for these images, along with the build script is hosted here: https://github.com/e2e-win/k8s_images
+
+Depending on your cluster network connectivity, you may have trouble pulling the images fast enough and thus tests will timeout.
+A solution for this problem is to pull the microsoft/windowsservercore:1803 ( or 1709 ) image before running tests, as it is the basis
+for all images used by the tests. You can also pull all the necessary test images ahead of time on the test nodes by using this script
+in the k8s_images repo: https://github.com/e2e-win/k8s_images/blob/master/PullImages.ps1 ( Note the dependancy on https://github.com/e2e-win/k8s_images/blob/master/Utils.ps1 )
+
 ##### NOTE:
 
 E2E tests now require all unschedulable nodes to have a label as well as a taint. Be sure to add
